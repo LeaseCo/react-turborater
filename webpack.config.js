@@ -3,12 +3,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const DIST_DIR = path.resolve(__dirname, 'build');
+const DEMO_DIR = path.resolve(__dirname, 'demo');
 const SRC_DIR = path.resolve(__dirname, 'src');
 const STATIC_DIR = path.resolve(__dirname, 'static');
 
 const webpackConfig = {
     devtool: 'source-map',
-    entry: ['babel-polyfill', `${SRC_DIR}/index.js`],
+    entry: ['babel-polyfill', `${DEMO_DIR}/index.js`],
     devServer: {
         https: true,
         port: 3004,
@@ -25,7 +26,7 @@ const webpackConfig = {
         rules: [
             {
                 test: /\.jsx?/,
-                include: [SRC_DIR],
+                include: [DEMO_DIR, SRC_DIR],
                 loader: 'babel-loader',
             },
         ],
@@ -33,7 +34,7 @@ const webpackConfig = {
     plugins: [
         new HtmlWebpackPlugin({
             hash: true,
-            template: `${SRC_DIR}/index.html`,
+            template: `${DEMO_DIR}/index.html`,
             filename: `${DIST_DIR}/index.html`,
         }),
         new CopyWebpackPlugin([

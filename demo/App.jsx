@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import ReactTurboRater from './ReactTurboRater';
+import ReactTurboRater from '../src/ReactTurboRater';
 
 ReactDom.render(
     <div>
