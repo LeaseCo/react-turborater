@@ -1,8 +1,8 @@
 {
   "name": "react-turborater",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "React wrapper for turbo rater iframe",
-  "main": "build/ReactTurboRater.jsx",
+  "main": "src/ReactTurboRater.jsx",
   "scripts": {
     "dev": "webpack-dev-server -d",
     "build": "webpack --config webpack.npm.config.js --mode production",
