@@ -28,14 +28,6 @@ const webpackConfig = {
                 include: [SRC_DIR],
                 loader: 'babel-loader',
             },
-            {
-                test: /\.css$/,
-                use: [
-                    { loader: 'style-loader' },
-                    { loader: 'css-loader' },
-                ],
-            },
-            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
         ],
     },
     plugins: [
@@ -46,6 +38,7 @@ const webpackConfig = {
         }),
         new CopyWebpackPlugin([
             { from: STATIC_DIR, to: DIST_DIR },
+            { from: `${SRC_DIR}/react-turborater.js`, to: DIST_DIR },
         ]),
     ],
     resolve: {

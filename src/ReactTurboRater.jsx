@@ -1,36 +1,50 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import querystring from 'querystring';
+import { iframeResizer } from 'iframe-resizer';
 
 class ReactTurboRater extends React.Component {
     state = {
-        loadingStyle: false,
+        loadingFrameCSS: false,
     };
     componentDidMount() {
         window.addEventListener(
             'message',
             (event) => {
                 switch (event.data.type) {
-                    case 'pageLoad':
-                        if (this.props.css) {
-                            this.setState({ loadingStyle: true });
+                    case 'pageLoad': {
+                        if (this.props.frameCSS) {
+                            this.setState({ loadingFrameCSS: true });
                             window.frames['insurance-frame'].contentWindow.postMessage(
-                                { type: 'loadCSS', css: this.props.css },
+                                { type: 'loadCSS', css: this.props.frameCSS },
                                 '*',
                             );
                         }
+
+                        const scripts = this.props.autoResize
+                            ? [
+                                  ...this.props.frameScripts,
+                                  'https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.0.4/iframeResizer.contentWindow.min.js',
+                              ]
+                            : this.props.frameScripts;
                         window.frames['insurance-frame'].contentWindow.postMessage(
-                            { type: 'loadScript', scripts: this.props.scripts },
+                            { type: 'loadScript', scripts },
                             '*',
                         );
                         this.handlePageLoad(event.data.page);
                         break;
-                    case 'cssLoaded':
-                        this.setState({ loadingStyle: false });
+                    }
+                    case 'cssLoaded': {
+                        this.setState({ loadingFrameCSS: false });
+                    }
                 }
             },
             false,
         );
+
+        if (this.props.autoResize) {
+            iframeResizer({}, '#insurance-frame');
+        }
 
         if (!this.props.development) return;
 
@@ -38,7 +52,7 @@ class ReactTurboRater extends React.Component {
             const contentDocument = window.frames['insurance-frame'].contentDocument;
             const myscript = contentDocument.createElement('script');
             myscript.type = 'text/javascript';
-            myscript.src = 'https://localhost:3004/turborater-bridge.js';
+            myscript.src = 'https://localhost:3004/react-turborater.js';
             contentDocument.head.appendChild(myscript);
         };
     }
@@ -58,18 +72,19 @@ class ReactTurboRater extends React.Component {
         const frameSrc = `https://${
             this.props.accountId
         }.quotes.iwantinsurance.com/welcome.aspx?${queryParams}`;
+        const frameStyle = this.props.frameCSS
+            ? {
+                  ...this.props.style,
+                  opacity: this.props.frameCSS && this.state.loadingFrameCSS ? 0 : 1,
+              }
+            : this.props.style;
         return (
             <iframe
                 id="insurance-frame"
                 title="insurance"
+                frameBorder="0"
                 src={frameSrc}
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    minHeight: '800px',
-                    border: 'solid 0px #ccc',
-                    opacity: this.props.css && this.state.loadingStyle ? 0 : 1,
-                }}
+                style={frameStyle}
             />
         );
     }
@@ -95,8 +110,10 @@ ReactTurboRater.propTypes = {
         mstat: PropTypes.string,
         vin: PropTypes.string,
     }),
-    css: PropTypes.string,
-    scripts: PropTypes.arrayOf(PropTypes.string),
+    style: PropTypes.object,
+    autoResize: PropTypes.bool,
+    frameCSS: PropTypes.string,
+    frameScripts: PropTypes.arrayOf(PropTypes.string),
     onPageLoad: PropTypes.shape({
         welcome: PropTypes.func,
         general: PropTypes.func,
@@ -113,6 +130,17 @@ ReactTurboRater.propTypes = {
 };
 
 ReactTurboRater.defaultProps = {
+    prefill: {},
+    style: {
+        width: '100%',
+        height: '100%',
+        minHeight: '800px',
+        border: 'solid 3px #000',
+    },
+    autoResize: false,
+    frameCSS: '',
+    frameScripts: [],
     onPageLoad: {},
+    development: false,
 };
 export default ReactTurboRater;
