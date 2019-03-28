@@ -1,6 +1,6 @@
 {
   "name": "react-turborater",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "React wrapper for turbo rater iframe",
   "main": "./build/ReactTurboRater.jsx",
   "files": [

@@ -52,7 +52,7 @@ class ReactTurboRater extends React.Component {
             const contentDocument = window.frames['insurance-frame'].contentDocument;
             const myscript = contentDocument.createElement('script');
             myscript.type = 'text/javascript';
-            myscript.src = 'https://localhost:3004/react-turborater.js';
+            myscript.src = 'https://s3.amazonaws.com/leaseco-public/react-turborater.min.js';
             contentDocument.head.appendChild(myscript);
         };
     }

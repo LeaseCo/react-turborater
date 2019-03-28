@@ -9,11 +9,14 @@ The UUID in the url is the account id for a specific TurboRater account.  You sh
 
 Once you login you will be presented with a 90s themed portal that has a lot of options to customize your TurboRater page. You can change the form options, e.g. make a field required. You can also add raw CSS and Javascript under the **Design** tab.
 
+Usually, you have a parent page that loads the TurboRater page as an iframe, and you change the style to match the parent account.
+
 ### Limitations
 * CSS
-    * If you have 2 sites that use the same iframe, you can't change the iframe style individually
+    * If you have 2 sites that use the same TurboRater account, you can't change the style individually
     *  It's inefficient to write CSS code on their admin portal
 * Can only inject 2 scripts
+    * Again, you can't change what script is loaded if you use the same TurboRater account for multiple sites
 * Parent has zero visibility into the iframe
     * For example, what if you have want to track who signed up on the parent page and save it to your own system
 
@@ -114,7 +117,19 @@ List of page names (case sensitive, without .aspx extention)
 `development`: This allows you to inject a local copy of `react-turborater.js` into the iframe.  You must run it from a browser with cross domain security disabled. I found Safari to work best for this.
 
 ### Local Development
-Checkout the repo and run the example app, that should be enough to get you started.
+Checkout the repo and run the example app, that should be enough to get you started. Make sure you set the prop `development` so that you can develop your integration locally with hot-reloading.
+
+During local development, the page may flicker, since `react-turborater.js` is injected after the iframe loads. This shouldn't be a problem on production since `react-turborater.js` is loaded in `<head>`
+
+```bash
+git clone git@github.com:LeaseCo/react-turborater.git
+cd react-turborater
+npm run dev
+# open a browser with cross domain security disabled (e.g. safari), and visit https://localhost:3004
+```
 
 ### Deploy to Production
-Add `https://s3.amazonaws.com/leaseco-public/react-turborater.min.js` on TurboRater's admin portal
+Add `https://s3.amazonaws.com/leaseco-public/react-turborater.min.js` on TurboRater's admin portal.
+
+### Limitations/TODOs
+This library uses `postMessage`, however, it's not checking the parent or iframe's domain.
