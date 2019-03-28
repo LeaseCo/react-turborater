@@ -1,12 +1,15 @@
 {
   "name": "react-turborater",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "React wrapper for turbo rater iframe",
-  "main": "src/ReactTurboRater.jsx",
+  "main": "./build/ReactTurboRater.jsx",
+  "files": [
+    "/build"
+  ],
   "scripts": {
     "dev": "webpack-dev-server -d",
-    "build": "webpack --config webpack.npm.config.js --mode production",
-    "build-script": "webpack --config webpack.script.config.js --mode production"
+    "build": "babel src/ReactTurboRater.jsx --out-file build/ReactTurboRater.jsx",
+    "prepublish": "npm run build"
   },
   "author": "Peng Wei <pwei@leaseco.io>",
   "license": "ISC",
