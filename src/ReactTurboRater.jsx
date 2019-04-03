@@ -56,7 +56,7 @@ class ReactTurboRater extends React.Component {
             contentDocument.head.appendChild(myscript);
         };
     }
-    handlePageLoad(page) {
+    handlePageLoad = (page) => {
         const pageId = page
             .split('/')
             .pop()
